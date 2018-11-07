@@ -41,7 +41,7 @@ setup(
     zip_safe=False,
     license='MIT',
     data_files=data_files,
-    use_scm_version=True,
+    version="0.0.2",
     setup_requires=["setuptools_scm"],
     install_requires=["setuptools"],
     tests_require=["pytest", "pytest-runner"],

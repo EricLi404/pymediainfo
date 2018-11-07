@@ -1,23 +1,23 @@
 os: linux
 language: python
-python:
-- 2.6
-- 2.7
-- 3.4
-- 3.5
-- 3.6
-- pypy
-- pypy3
+#python:
+#- 2.6
+#- 2.7
+#- 3.4
+#- 3.5
+#- 3.6
+#- pypy
+#- pypy3
 addons:
   apt:
     packages:
     - libmediainfo-dev
 matrix:
   include:
-    - python: 3.7
-      dist: xenial
-      # TODO: remove this hack once it's not required any more
-      sudo: true
+#    - python: 3.7
+#      dist: xenial
+#      # TODO: remove this hack once it's not required any more
+#      sudo: true
     - os: osx
       # Not required but makes Travis' output prettier
       python: 2.7
@@ -57,13 +57,14 @@ notifications:
   email:
     on_success: change
     on_failure: change
-deploy:
-  skip_upload_docs: true
-  provider: pypi
-  user: sbraz
-  password:
-    secure: PPuAhhXw9Ccs0ydbCSaEwocIzIDN6YrT0pWA9HHIBD2NVSFcgr0TBS/D0g2xUOCJtrXt4VlMYmgNop8vA/JjgiRWze6t1SPAKawbHqmVtCUORqqxWOWxXSh330LgWZyXnpsGpAyWSozG7cwJ3AGNsGfmxs8las4qgSWG5o9v/mA=
-  on:
-    branch: master
-    tags: true
-    python: 3.6
+after_success: |
+  if [[ $TRAVIS_OS_NAME == osx && $TRAVIS_BRANCH == wheel && $MB_PYTHON_VERSION == 3.7 ]]; then
+    python setup.py sdist
+    python setup.py bdist_wheel
+    pip install twine
+    twine upload --repository-url https://test.pypi.org/legacy/ -u sbraz -p $PYPI_PASSWORD dist/*
+  fi
+env:
+  global:
+    # PYPI_PASSWORD
+    secure: "BxnZeOAKTELq77Ut4d4g4ilEG7TfPHiXQ4OG0f/avdHpU0ngS8o7BYOYOrlYLBeT0utzTan7YK3l1ezYYaz4s6LWjxl1kJrOxkgo6qHlMGXRiDAV/eeunPdwQ93kZRyG4R8BUlqigp82J6zjs9SOCvkRZwKE4tyWmirKj59bkhM="
